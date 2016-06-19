@@ -75,12 +75,6 @@ Dependencies
 ### Manual installation
 
 Install [libpcap][libpcap] as described on their website.
-Put [uthash.h][uthash.h] in any valid headers search path, or alternatively:
-
-    mkdir -p deps/uthash/
-    pushd deps/uthash/
-    wget https://raw.githubusercontent.com/troydhanson/uthash/master/src/uthash.h
-    popd
 
 Build
 -----
