@@ -2,7 +2,7 @@ SRC_FILES := $(shell ls *.c)
 OBJ_FILES := $(SRC_FILES:.c=.o)
 TARGET := zizzania
 CXX := gcc
-CXXFLAGS := -std=gnu99 -O3 -Os -Wall -I ../deps/uthash
+CXXFLAGS := -std=gnu99 -O3 -Os -Wall
 LDFLAGS := -lpthread -lpcap
 
 all:$(TARGET)
