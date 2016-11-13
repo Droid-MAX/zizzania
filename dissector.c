@@ -127,18 +127,22 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
     }
 
     /* skip unwanted access points */
+    #ifdef DEBUG
     if (!bss->is_allowed) {
         if (!is_beacon) {
-            log_ts("%s @ %s - Skipping unwanted BSSID", station_str, bssid_str);
+            log_ts("%s @ %s - Skipping unwanted BSS traffic", station_str, bssid_str);
         }
         return;
     }
+    #endif
 
     /* save a beacon (just once per bss) */
     if (is_beacon) {
         if (!bss->has_beacon) {
             int ssid_length;
             const char *ssid;
+            char escaped_ssid[ZZ_BEACON_MAX_SSID_ESCAPE_LENGTH + 1] = {0};
+            int is_escaped;
 
             /* dump the packet if requested */
             if (zz->dumper) {
@@ -150,8 +154,13 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
                      packet_header->caplen - (cursor - packet),
                      &ssid, &ssid_length);
             memcpy(bss->ssid, ssid, ssid_length);
+            bss->ssid_length = ssid_length;
             bss->has_beacon = 1;
-            zz_out("SSID discovered '%s' (%s)", bss->ssid, bssid_str);
+
+            /* notify the user */
+            zz_ssid_escape_sprint(escaped_ssid, &is_escaped, ssid, ssid_length);
+            zz_out("BSS discovered %s'%s' (%s)",
+                   is_escaped ? "$": "", escaped_ssid, bssid_str);
         }
 
         /* anyway beacon processing stops here */
