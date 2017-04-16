@@ -1,18 +1,32 @@
-SRC_FILES := $(shell ls *.c)
-TARGET := zizzania
-CXXFLAGS := -std=gnu99 -O3 -Os -Wall
+include $(TOPDIR)/rules.mk
 
-all:$(TARGET)
+PKG_NAME:=zizzania
+PKG_VERSION:=0.0.1
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=libpthread libpcap
 
-$(TARGET):$(SRC_FILES)
-	@echo "Compile $@"
-	@$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
-	@$(STRIP) $@
+include $(INCLUDE_DIR)/package.mk
 
-clean:
-	rm -f zizzania
+define Package/$(PKG_NAME)
+	SECTION:=utils
+	CATEGORY:=Utilities
+	TITLE:=zizzania
+	MAINTAINER:=cyrus-and<https://github.com/cyrus-and/zizzania>
+	DEPENDS:=+libpthread +libpcap
+endef
 
-#默认无需修改本Makefile，如需交叉编译请修改以下变量
-CXX := gcc
-STRIP := strip
-LDFLAGS := -lpthread -lpcap
+define Package/$(PKG_NAME)/description
+	Automated DeAuth Attack Tool
+endef
+
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+	cp -r src/* $(PKG_BUILD_DIR)
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/zizzania $(1)/usr/bin
+endef
+
+$(eval $(call BuildPackage,$(PKG_NAME)))
