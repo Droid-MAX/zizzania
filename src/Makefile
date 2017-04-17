@@ -4,8 +4,8 @@ SRC := $(shell ls *.c)
 all:$(TAR)
 
 $(TAR):$(SRC)
-	@$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
-	@$(STRIP) $@
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
+	$(STRIP) $@
 
 clean:
 	rm -f $(TAR)
