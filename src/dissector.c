@@ -121,28 +121,26 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
 
     /* lookup or create a descriptor for this bss */
     if (zz_bsss_lookup(&zz->bsss, bssid, &bss)) {
-        /* check if this bssid is filtered out just once */
+        /* allowed if no constraints are specified or explicitly added */
         bss->is_allowed = (zz_members_is_empty(&zz->setup.allowed_bssids) ||
-                           zz_members_get(&zz->setup.allowed_bssids, bssid));
+                           zz_members_match(&zz->setup.allowed_bssids, bssid));
     }
 
     /* skip unwanted access points */
-    #ifdef DEBUG
     if (!bss->is_allowed) {
+        #ifdef DEBUG
         if (!is_beacon) {
-            log_ts("%s @ %s - Skipping unwanted BSS traffic", station_str, bssid_str);
+            log_ts("%s @ %s $'%s' - Skipping unwanted BSS traffic", station_str, bssid_str, bss->ssid);
         }
+        #endif
         return;
     }
-    #endif
 
     /* save a beacon (just once per bss) */
     if (is_beacon) {
         if (!bss->has_beacon) {
             int ssid_length;
             const char *ssid;
-            char escaped_ssid[ZZ_BEACON_MAX_SSID_ESCAPE_LENGTH + 1] = {0};
-            int is_escaped;
 
             /* dump the packet if requested */
             if (zz->dumper) {
@@ -154,13 +152,11 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
                      packet_header->caplen - (cursor - packet),
                      &ssid, &ssid_length);
             memcpy(bss->ssid, ssid, ssid_length);
-            bss->ssid_length = ssid_length;
             bss->has_beacon = 1;
 
             /* notify the user */
-            zz_ssid_escape_sprint(escaped_ssid, &is_escaped, ssid, ssid_length);
-            zz_out("BSS discovered %s'%s' (%s)",
-                   is_escaped ? "$": "", escaped_ssid, bssid_str);
+            zz_ssid_escape_sprint(bss->ssid, ssid, ssid_length);
+            zz_out("BSS discovered %s $'%s'", bssid_str, bss->ssid);
         }
 
         /* anyway beacon processing stops here */
@@ -168,8 +164,8 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
     }
 
     /* skip blacklisted stations */
-    if (zz_members_get(&zz->setup.banned_stations, station)) {
-        log_ts("%s @ %s - Skipping banned station", station_str, bssid_str);
+    if (zz_members_match(&zz->setup.banned_stations, station)) {
+        log_ts("%s @ %s $'%s' - Skipping banned station", station_str, bssid_str, bss->ssid);
         return;
     }
 
@@ -215,16 +211,16 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
     if (outcome.ignore) {
         switch (outcome.ignore_reason) {
         case ZZ_IGNORE_REASON_RETRANSMISSION:
-            log_ts("%s @ %s - Handshake message #%d (retransmission)",
-                   station_str, bssid_str, outcome.handshake_info);
+            log_ts("%s @ %s $'%s' - Handshake message #%d (retransmission)",
+                   station_str, bssid_str, bss->ssid, outcome.handshake_info);
             break;
         case ZZ_IGNORE_REASON_INVALID_EAPOL:
-            log_ts("%s @ %s - Ignoring invalid key flags",
-                   station_str, bssid_str);
+            log_ts("%s @ %s $'%s' - Ignoring invalid key flags",
+                   station_str, bssid_str, bss->ssid);
             break;
         case ZZ_IGNORE_REASON_INVALID_COUNTER:
-            log_ts("%s @ %s - Ignoring invalid replay counter",
-                   station_str, bssid_str);
+            log_ts("%s @ %s $'%s' - Ignoring invalid replay counter",
+                   station_str, bssid_str, bss->ssid);
             break;
         }
 
@@ -251,8 +247,8 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
     if (outcome.track_client) {
         switch (outcome.track_reason) {
         case ZZ_TRACK_REASON_ALIVE:
-            log_ts("%s @ %s - Activity detected again",
-                   station_str, bssid_str);
+            log_ts("%s @ %s $'%s' - Activity detected again",
+                   station_str, bssid_str, bss->ssid);
             break;
         case ZZ_TRACK_REASON_FIRST_HANDSHAKE:
             extra_info = " (first attempt detected)";
@@ -267,16 +263,16 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
     }
 
     if (outcome.handshake_info) {
-        log_ts("%s @ %s - Handshake message #%d%s",
-               station_str, bssid_str, outcome.handshake_info, extra_info);
+        log_ts("%s @ %s $'%s' - Handshake message #%d%s",
+               station_str, bssid_str, bss->ssid, outcome.handshake_info, extra_info);
     }
 
     if (outcome.new_client) {
-        zz_out("New client %s @ %s", station_str, bssid_str);
+        zz_out("New client %s @ %s $'%s'", station_str, bssid_str, bss->ssid);
     }
 
     if (outcome.got_handshake) {
-        zz_out("^_^ Full handshake for %s @ %s", station_str, bssid_str);
+        zz_out("^_^ Full handshake for %s @ %s $'%s'", station_str, bssid_str, bss->ssid);
 
         /* stop deauthenticating this client */
         if (zz->setup.is_live) {
@@ -285,6 +281,6 @@ void zz_dissect_packet(zz_handler *zz, const struct pcap_pkthdr *packet_header,
 
         /* update stats */
         bss->n_handshakes++;
-        zz_members_add(&bss->stations, station);
+        zz_members_put(&bss->stations, station);
     }
 }

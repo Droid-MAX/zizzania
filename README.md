@@ -3,7 +3,7 @@ zizzania
 
 zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(一个信标+EAPOL帧+数据)。为了加快这一过程，zizzania将DeAuth帧发送到需要建立握手连接的接入点，正确处理重传与重连，并尝试限制发送到每个接入点的DeAuth帧的数量。
 
-![Screenshot](http://i.imgur.com/NG7CyU0.png)
+![Screenshot](https://i.imgur.com/zGxPSTE.png)
 
 用法
 -----
@@ -31,9 +31,9 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 示例
 --------
 
-* 将无线网络接口切换到监听模式并置于信道6，保存与特定接入点之间收集到的流量:
+* 将无线网络接口切换到监听模式并置于信道6，保存与特定接入点之间收集到的流量，但MAC地址以"00:11:22"开头的站点除外:
 
-        zizzania -i wlan0 -c 6 -b AA:BB:CC:DD:EE:FF -w out.pcap
+        zizzania -i wlan0 -c 6 -b AA:BB:CC:DD:EE:FF -x 00:11:22:33:44:55/ff:ff:ff:00:00:00 -w out.pcap
 
 * 假设无线网络接口已经切换到监听模式，被动分析当前信道上任一接入点所产生的流量:
 

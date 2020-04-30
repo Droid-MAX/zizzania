@@ -1,5 +1,5 @@
 TAR := zizzania
-SRC := $(shell ls *.c)
+SRC := $(wildcard *.c)
 
 all:$(TAR)
 
@@ -13,7 +13,7 @@ clean:
 #默认无需修改本Makefile，如需交叉编译请参照下方示例修改
 CC := gcc
 STRIP := strip
-CFLAGS := -std=gnu99 -Wall -O3 -Os
+CFLAGS := -Wall -O3 -Os
 LDFLAGS := -lpthread -lpcap
 
 #交叉编译配置示例

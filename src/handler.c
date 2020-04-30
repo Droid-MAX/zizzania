@@ -16,7 +16,7 @@
 #include "util.h"
 
 /* use smaller snaplen if not saving traffic */
-#define MIN_SNAPLEN 128
+#define MIN_SNAPLEN 256
 #define MAX_SNAPLEN 65535
 
 #define BPF "wlan[0] == " ZZ_STRING(ZZ_FCF_DATA) \
@@ -26,36 +26,44 @@
 /* libpcap to_ms parameter */
 #define READ_TIMEOUT 50
 
-static int set_monitor(zz_handler *zz) {
-    if (zz->setup.is_live && zz->setup.channel > 0) {
-        zz_log("Setting '%s' in monitor mode on channel %d",
-               zz->setup.input, zz->setup.channel);
-        if (!zz_set_monitor(zz)) {
-            zz_error(zz, "Cannot set '%s' in monitor mode: %s",
-                     zz->setup.input, strerror(errno));
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-static int open_pcap(zz_handler *zz) {
+static int create_pcap(zz_handler *zz) {
     char pcap_error_buffer[PCAP_ERRBUF_SIZE];
 
     /* get pcap handle live */
     if (zz->setup.is_live) {
-        int snaplen;
-
-        /* open */
+        /* create but not activate */
         *pcap_error_buffer = '\0';
-        snaplen = zz->setup.output ? MAX_SNAPLEN : MIN_SNAPLEN;
-        zz->pcap = pcap_open_live(zz->setup.input, snaplen, 1 /* promisc */,
-                                  READ_TIMEOUT, pcap_error_buffer);
+        zz->pcap = pcap_create(zz->setup.input, pcap_error_buffer);
 
         /* log pcap warning (not a failure) */
         if (zz->pcap && *pcap_error_buffer) {
             zz_log("WARNING: %s", pcap_error_buffer);
+        }
+
+        /* if success (failure is handled later) */
+        if (zz->pcap) {
+            int snaplen;
+
+            /* set individual options and activate the handler */
+            snaplen = zz->setup.output ? MAX_SNAPLEN : MIN_SNAPLEN;
+            if (pcap_set_snaplen(zz->pcap, snaplen) != 0 ||
+                pcap_set_promisc(zz->pcap, 1) != 0 ||
+                pcap_set_timeout(zz->pcap, READ_TIMEOUT) ||
+                pcap_set_rfmon(zz->pcap, 1) ||
+                pcap_activate(zz->pcap)) {
+                zz_error(zz, "libpcap: %s", pcap_geterr(zz->pcap));
+                return 0;
+            }
+
+            /* switch to the desired channel */
+            if (zz->setup.is_live && zz->setup.channel > 0) {
+                zz_log("Setting '%s' to channel %d", zz->setup.input, zz->setup.channel);
+                if (!zz_set_channel(zz)) {
+                    zz_error(zz, "Cannot set '%s' to channel %d: %s",
+                             zz->setup.input, zz->setup.channel, strerror(errno));
+                    return 0;
+                }
+            }
         }
     }
     /* get pcap handler from file */
@@ -180,7 +188,7 @@ static int packet_loop(zz_handler *zz) {
 int zz_initialize(zz_handler *zz) {
     memset(zz, 0, sizeof(zz_handler));
     zz_members_new(&zz->setup.allowed_bssids);
-    zz_members_new(&zz->setup.allowed_bssids);
+    zz_members_new(&zz->setup.banned_stations);
     zz_bsss_new(&zz->bsss);
     zz_clients_new(&zz->clients);
 
@@ -206,8 +214,7 @@ int zz_initialize(zz_handler *zz) {
 }
 
 int zz_start(zz_handler *zz) {
-    return set_monitor(zz) &&
-           open_pcap(zz) &&
+    return create_pcap(zz) &&
            zz_drop_root(zz) &&
            check_monitor(zz) &&
            set_bpf(zz) &&

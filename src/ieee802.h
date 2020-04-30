@@ -23,7 +23,7 @@
 #define ZZ_BEACON_SSID_PARAM_TYPE    0x00
 #define ZZ_BEACON_MAX_SSID_LENGTH    0xff /* spec says 32 */
 /* each character could possibly be escaped as \xHH */
-#define ZZ_BEACON_MAX_SSID_ESCAPE_LENGTH  ZZ_BEACON_MAX_SSID_LENGTH * 4
+#define ZZ_BEACON_MAX_SSID_ESCAPED_LENGTH  ZZ_BEACON_MAX_SSID_LENGTH * 4
 
 #define ZZ_EAPOL_ETHERTYPE 0x888e /* network byte order */
 
@@ -110,10 +110,9 @@ zz_mac_addr zz_mac_addr_from_array(const uint8_t *array);
 void zz_mac_addr_to_array(uint8_t *octets, zz_mac_addr addr);
 
 void zz_mac_addr_sprint(char *buffer, zz_mac_addr addr);
-int zz_mac_addr_sscan(zz_mac_addr *addr, const char *buffer);
+int zz_mac_addr_sscan(zz_mac_addr *addr, const char *buffer, const char *terminators);
 
 /* at least ZZ_BEACON_MAX_SSID_ESCAPE_LENGTH + 1 for '\0' */
-void zz_ssid_escape_sprint(char *buffer, int *is_escaped,
-                           const char *ssid, int ssid_length);
+void zz_ssid_escape_sprint(char *buffer, const char *ssid, int ssid_length);
 
 #endif
