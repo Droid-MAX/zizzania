@@ -5,29 +5,6 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 
 ![Screenshot](https://i.imgur.com/zGxPSTE.png)
 
-用法
------
-
-    zizzania (-r <file> | -i <device> [-c <channel>]
-              ([-n] | [-d <count>] [-a <count>] [-t <seconds>]))
-             [-b <address>...] [-x <address>...] [-2 | -3]
-             [-w <file> [-g]] [-v]
-
-    -i <device>   Use <device> for both capture and injection
-    -c <channel>  Set <device> to RFMON mode on <channel>
-    -n            Passively wait for WPA handshakes
-    -d <count>    Send groups of <count> deauthentication frames
-    -a <count>    Perform <count> deauthentications before giving up
-    -t <seconds>  Time to wait between two deauthentication attempts
-    -r <file>     Read packets from <file> (- for stdin)
-    -b <address>  Limit the operations to the given BSSID
-    -x <address>  Exclude the given station from the operations
-    -2            Settle for the first two handshake messages
-    -3            Settle for the first three handshake messages
-    -w <file>     Write packets to <file> (- for stdout)
-    -g            Also dump multicast and broadcast traffic
-    -v            Print verbose messages to stderr (toggle with SIGUSR1)
-
 示例
 --------
 
