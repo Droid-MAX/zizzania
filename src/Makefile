@@ -1,23 +1,39 @@
-TAR := zizzania
-SRC := $(wildcard *.c)
+TARGET     = zizzania
 
-all:$(TAR)
+CC        ?= gcc
+STRIP     ?= strip
+INSTALL   ?= install
+PREFIX    ?= /usr
+BINDIR    ?= $(PREFIX)/sbin
+CFLAGS    ?= -std=gnu99 -Wall -O3 -Os
+LDFLAGS   ?= -lpthread -lpcap
 
-$(TAR):$(SRC)
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
-	$(STRIP) $@
+SRCS = bsss.c clients.c dispatcher.c dissector.c handler.c handshake.c ieee802.c iface.c killer.c main.c members.c options.c terminal.c util.c
+
+ifdef LIBS_BASE
+CFLAGS += -I$(LIBS_BASE)/include
+LDFLAGS += -L$(LIBS_BASE)/lib -Wl,-rpath -Wl,$(LIBS_BASE)/lib
+endif
+
+ifeq ($(CONFIG_STATIC), yes)
+LDFLAGS += -static
+endif
+
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
 
 clean:
-	rm -f $(TAR)
+	rm -f $(TARGET)
 
-#默认无需修改本Makefile，如需交叉编译请参照下方示例修改
-CC := gcc
-STRIP := strip
-CFLAGS := -Wall -O3 -Os
-LDFLAGS := -lpthread -lpcap
+strip: $(TARGET)
+	$(STRIP) $(TARGET)
+
+install: $(TARGET)
+	mkdir -p $(DESTDIR)$(BINDIR)
+	$(INSTALL) -m 0755 $(TARGET) $(DESTDIR)$(BINDIR)
 
 #交叉编译配置示例
 #CC := mipsel-openwrt-linux-gcc
 #STRIP := mipsel-openwrt-linux-strip
 #CFLAGS := -std=gnu99 -Wall -O3 -Os -I/home/workspace/libpcap/include
-#LDFLAGS := -ldl -lpthread /home/workspace/libpcap/lib/libpcap.so.1.7.4
+#LDFLAGS := -ldl -lpthread -L/home/workspace/libpcap/lib/libpcap.so.1.7.4
