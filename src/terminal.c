@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "handler.h"
 #include "release.h"
@@ -7,25 +8,27 @@
 void zz_print_usage() {
     #define LN(x) x "\n"
     fprintf(stderr,
-            LN("zizzania v" ZZ_VERSION " - Automated DeAuth attack")
-            LN("Copyright (c) 2021 Andrea Cardaci <cyrus.and@gmail.com>")
+            LN("zizzania v" ZZ_VERSION " - " ZZ_DESCRIPTION)
+            LN("Copyright (c) " ZZ_YEAR " " ZZ_AUTHOR)
             LN("")
             LN("Usage:")
             LN("")
-            LN("    zizzania (-r <file> | -i <device> [-c <channel>]")
+            LN("    zizzania (-r <file> | -i <device> [-M] [-c <channel>] [-q]")
             LN("              (-n | [-d <count>] [-a <count>] [-t <seconds>]))")
             LN("             [-b <match>...] [-B <match>...] [-x b]")
             LN("             [-s <match>...] [-S <match>...] [-x s]")
             LN("             [-2 | -3]")
             LN("             [-w <file> [-g]] [-v]")
             LN("")
+            LN("    -r <file>     Read packets from <file> (- for stdin)")
             LN("    -i <device>   Use <device> for both capture and injection")
-            LN("    -c <channel>  Set <device> to RFMON mode on <channel>")
+            LN("    -M            Do not set <devidce> in RFMON mode (useful for airmon-ng)")
+            LN("    -c <channel>  Tune the <device> on <channel>")
+            LN("    -q            Quit after capturing the first handshake")
             LN("    -n            Passively wait for WPA handshakes")
             LN("    -d <count>    Send groups of <count> deauthentication frames")
             LN("    -a <count>    Perform <count> deauthentications before giving up")
             LN("    -t <seconds>  Time to wait between two deauthentication attempts")
-            LN("    -r <file>     Read packets from <file> (- for stdin)")
             LN("    -b <match>    Include the given BSSID (<address>[/<mask>])")
             LN("    -B <match>    Exclude the given BSSID (<address>[/<mask>])")
             LN("    -s <match>    Include the given station (<address>[/<mask>])")

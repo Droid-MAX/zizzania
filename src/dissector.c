@@ -1,3 +1,5 @@
+#include <strings.h>
+
 #include "dissector.h"
 #include "handshake.h"
 #include "ieee802.h"
@@ -308,5 +310,10 @@ void zz_dissect_packet(u_char *_zz, const struct pcap_pkthdr *packet_header,
         /* update stats */
         bss->n_handshakes++;
         zz_members_put(&bss->stations, station);
+
+        /* exit as soon as one handshake is captured in live mode */
+        if (zz->setup.is_live && zz->setup.early_quit) {
+            pcap_breakloop(zz->pcap);
+        }
     }
 }
