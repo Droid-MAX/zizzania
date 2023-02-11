@@ -36,7 +36,7 @@ download_files(){
 build_depends(){
 	if [ -d $LIBPCAP_DIR ]; then
 		cd $LIBPCAP_DIR; \
-		./configure --with-pcap=linux --disable-dbus --prefix=$LIBS_DIR; \
+		./configure --with-pcap=linux --disable-dbus --disable-remote --prefix=$LIBS_DIR; \
 		make clean; \
 		make; \
 		make install
