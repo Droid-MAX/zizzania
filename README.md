@@ -42,16 +42,22 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 
     make -C src
 
+编译文件将会生成在 `src` 目录下
+
 静态编译
 -----
 
-    sudo apt install -y build-essential bison flex
+    sudo apt install -y build-essential bison flex # 安装静态编译libpcap-dev库所需的必要软件包
     ./build.sh
+
+编译文件将会生成在 `build` 目录下
 
 编译DEB安装包
 -----
 
     make -C src deb
+
+编译文件将会生成在当前目录下
 
 编译IPK插件包
 -----
