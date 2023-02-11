@@ -24,43 +24,38 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 
         airdecap-ng -b AA:BB:CC:DD:EE:FF -e SSID -p passphrase out.pcap
 
-依赖
-------------
 
-* [libpcap][libpcap]
+编译与安装
+--------
 
-### 在线安装
+### 安装依赖
 
-    sudo apt-get install libpcap-dev
+    sudo apt install -y build-essential pkg-config bison flex libpcap-dev
 
-### 手动安装
 
-按照网站上的说明安装[libpcap][libpcap]
-
-编译
------
+### 编译
 
     make -C src
 
 编译文件将会生成在 `src` 目录下
 
-静态编译
------
+    make -C src install
 
-    sudo apt install -y build-essential pkg-config bison flex # 安装静态编译libpcap-dev库所需的必要软件包
+将 `zizzania` 安装到 `/usr/sbin` 目录下
+
+### 静态编译
+
     ./build.sh
 
 编译文件将会生成在 `build` 目录下
 
-编译DEB安装包
------
+### 编译DEB安装包
 
     make -C src deb
 
 编译文件将会生成在当前目录下
 
-编译IPK插件包
------
+### 编译IPK插件包
 
 首先下载 `OpenWrt SDK` 到本地并解压
 
@@ -70,4 +65,3 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
     make package/zizzania/compile V=s
 
 [aircrack-ng]: http://www.aircrack-ng.org
-[libpcap]: http://www.tcpdump.org
