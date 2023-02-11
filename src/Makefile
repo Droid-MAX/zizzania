@@ -1,4 +1,6 @@
 TARGET     = zizzania
+PKG        = $(TARGET)
+VERSION    = 0.3.0-1
 
 CC        ?= gcc
 STRIP     ?= strip
@@ -32,8 +34,9 @@ install: $(TARGET)
 	mkdir -p $(DESTDIR)$(BINDIR)
 	$(INSTALL) -m 0755 $(TARGET) $(DESTDIR)$(BINDIR)
 
-#交叉编译配置示例
-#CC := mipsel-openwrt-linux-gcc
-#STRIP := mipsel-openwrt-linux-strip
-#CFLAGS := -std=gnu99 -Wall -O3 -Os -I/home/workspace/libpcap/include
-#LDFLAGS := -ldl -lpthread -L/home/workspace/libpcap/lib/libpcap.so.1.7.4
+debian/changelog:
+	dch --create -v $(VERSION) --package $(PKG)
+
+deb:
+	dpkg-buildpackage -b -us -uc
+.PHONY: install debian/changelog deb

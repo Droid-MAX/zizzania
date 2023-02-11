@@ -6,7 +6,8 @@ BUILD_DIR=$PWD/build
 DOWNLOAD_DIR=$PWD/dl
 LIBS_DIR=$BUILD_DIR/libs
 
-LIBPCAP_URL="https://www.tcpdump.org/release/libpcap-1.8.1.tar.gz"
+LIBPCAP_VER="1.8.1"
+LIBPCAP_URL="https://www.tcpdump.org/release/libpcap-${LIBPCAP_VER}.tar.gz"
 LIBPCAP_DIR=""
 
 prepare_dirs(){
@@ -23,12 +24,12 @@ prepare_dirs(){
 }
 
 download_files(){
-	if [ -d $DOWNLOAD_DIR ] && [ ! -d $DOWNLOAD_DIR/libpcap-1.8.1 ]; then
+	if [ -d $DOWNLOAD_DIR ] && [ ! -d $DOWNLOAD_DIR/libpcap-${LIBPCAP_VER} ]; then
 		cd $DOWNLOAD_DIR; \
 		wget $LIBPCAP_URL; \
-		tar xf libpcap-1.8.1.tar.gz
+		tar xf libpcap-${LIBPCAP_VER}.tar.gz
 	fi
-	LIBPCAP_DIR=$(cd $DOWNLOAD_DIR/libpcap-1.8.1 && pwd)
+	LIBPCAP_DIR=$(cd $DOWNLOAD_DIR/libpcap-${LIBPCAP_VER} && pwd)
 	return 0
 }
 

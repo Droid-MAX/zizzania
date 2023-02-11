@@ -1,0 +1,14 @@
+Source: zizzania
+Priority: optional
+Maintainer: Andrea Cardaci <https://cardaci.xyz/>
+Build-Depends: debhelper (>= 9), libpcap-dev
+Standards-Version: 0.3.0
+Section: utils
+Vcs-Git: https://github.com/cyrus-and/zizzania.git
+Vcs-Browser: https://github.com/cyrus-and/zizzania
+
+Package: zizzania
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Automated DeAuth attack tool
+
