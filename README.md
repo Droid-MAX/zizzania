@@ -42,6 +42,16 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 
     make -C src
 
+静态编译
+-----
+
+    sudo apt install -y build-essential bison flex
+    ./build.sh
+
+编译DEB安装包
+-----
+
+    make -C src deb
 
 [aircrack-ng]: http://www.aircrack-ng.org
 [libpcap]: http://www.tcpdump.org
