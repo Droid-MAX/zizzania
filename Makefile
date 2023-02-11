@@ -17,6 +17,8 @@ define Package/$(PKG_NAME)
 	MAINTAINER:=Andrea Cardaci <https://cardaci.xyz/>
 	URL:=https://github.com/cyrus-and/zizzania
 	DEPENDS:=+libpthread +libpcap
+	TARGET_CFLAGS:=-std=gnu99 -Wall -O3 -Os
+	TARGET_LDFLAGS:=-ldl -lpthread -lpcap
 endef
 
 define Package/$(PKG_NAME)/description
