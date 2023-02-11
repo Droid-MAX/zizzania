@@ -53,5 +53,15 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 
     make -C src deb
 
+编译IPK插件包
+-----
+
+首先下载 `OpenWrt SDK` 到本地并解压
+
+    cd /path/to/your/sdk
+    git clone https://github.com/Droid-MAX/zizzania package/zizzania
+    make menuconfig # Choose `zizzania` in section `Utilities`
+    make package/zizzania/compile V=s
+
 [aircrack-ng]: http://www.aircrack-ng.org
 [libpcap]: http://www.tcpdump.org
