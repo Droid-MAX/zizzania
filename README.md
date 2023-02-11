@@ -40,7 +40,7 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 编译
 -----
 
-    make
+    make -C src
 
 
 [aircrack-ng]: http://www.aircrack-ng.org
