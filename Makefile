@@ -4,19 +4,23 @@ PKG_NAME:=zizzania
 PKG_VERSION:=0.3.0
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=libpthread libpcap
+PKG_MAINTAINER:=Andrea Cardaci <https://cardaci.xyz/>
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	SECTION:=utils
 	CATEGORY:=Utilities
-	TITLE:=zizzania
-	MAINTAINER:=cyrus-and<https://github.com/cyrus-and/zizzania>
+	TITLE:=Automated DeAuth attack tool
+	MAINTAINER:=Andrea Cardaci <https://cardaci.xyz/>
+	URL:=https://github.com/cyrus-and/zizzania
 	DEPENDS:=+libpthread +libpcap
 endef
 
 define Package/$(PKG_NAME)/description
-	Automated DeAuth Attack Tool
+	Automated DeAuth attack tool
 endef
 
 define Build/Prepare
@@ -25,8 +29,8 @@ define Build/Prepare
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/zizzania $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/zizzania $(1)/usr/sbin
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
