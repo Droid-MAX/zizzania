@@ -1,0 +1,31 @@
+#include <windows.h>
+#include "res.h"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0, 3, 0, 0
+ PRODUCTVERSION 0, 3, 0, 0
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE 0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+   BLOCK "040904E4"
+   BEGIN
+    VALUE "FileDescription", "Automated DeAuth Attack Tool\0"
+    VALUE "OriginalFilename", "zizzania.exe\0"
+    VALUE "CompanyName", "-= (c) 2018-2022 Andrea Cardaci =-\0"
+    VALUE "FileVersion", "0.3.0\0"
+    VALUE "InternalName", "zizzania\0"
+    VALUE "LegalCopyright", "Copyright (c) 2018-2022 by Andrea Cardaci <https://cardaci.xyz>\0"
+    VALUE "ProductName", "zizzania\0"
+    VALUE "ProductVersion", "0.3.0\0"
+   END
+ END
+ BLOCK "VarFileInfo"
+ BEGIN
+  VALUE "Translation", 0x0409, 1252
+ END
+END
+
+zizzania ICON DISCARDABLE "zizzania.ico"
