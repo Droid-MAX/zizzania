@@ -8,7 +8,7 @@ INSTALL   ?= install
 PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/sbin
 CFLAGS    ?= -std=gnu99 -Wall -O3 -Os
-LDFLAGS   ?= -lpthread -lpcap
+LDFLAGS   ?= -pthread -lpcap
 
 SRCS = bsss.c clients.c dispatcher.c dissector.c handler.c handshake.c ieee802.c iface.c killer.c members.c options.c terminal.c util.c zizzania.c
 
