@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 export DEB_CFLAGS_SET = -std=gnu99 -Wall -O3 -Os
-export DEB_LDFLAGS_SET = -lpthread -lpcap
+export DEB_LDFLAGS_SET = -pthread -lpcap
 
 %:
 	dh $@
