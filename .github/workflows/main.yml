@@ -18,10 +18,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - artifact_name: ./artifact/x86/zizzania.exe
+          - artifact_name: ./artifact/zizzania.exe
             asset_name: zizzania_x86.exe
-          - artifact_name: ./artifact/x64/zizzania.exe
-            asset_name: zizzania_x64.exe
 
     if: github.event.repository.owner.id == github.event.sender.id
 
@@ -39,7 +37,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo -E apt-get update
-          sudo -E apt-get install -y pkg-config bison flex mingw-w64 tar wget make
+          sudo -E apt-get install -y pkg-config mingw-w64 unzip wget make
 
       # step3: Build App
       - name: Build App
@@ -50,8 +48,7 @@ jobs:
       - name: Prepare Artifact
         run: |
           mkdir -p ./artifact/
-          cp -rf ./build/x86 ./artifact/
-          cp -rf ./build/x64 ./artifact/
+          cp -rf ./build ./artifact/
 
       # step5: Deliver Package
       - name: Deliver Package
