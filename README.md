@@ -45,7 +45,7 @@ zizzania嗅探无线流量并监听WPA握手，并仅转储适合解密的帧(�
 
 ### 静态编译
 
-    ./build.sh
+    ./build-for-linux.sh
 
 编译文件将会生成在 `build` 目录下
 
