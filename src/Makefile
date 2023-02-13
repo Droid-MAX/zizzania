@@ -8,7 +8,7 @@ INSTALL   ?= install
 WINDRES   ?= windres
 PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/sbin
-CFLAGS    ?= -std=gnu99 -Wall -O3 -Os
+CFLAGS    ?= -std=gnu99 -Wall -O3 -Os -D_FILE_OFFSET_BITS=64
 LDFLAGS   ?= -pthread -lpcap
 RES       ?= res.bin
 
@@ -26,9 +26,8 @@ endif
 ifeq ($(TARGET_OS), MinGW)
 EXEC_SUFFIX := .exe
 SRCS += $(RES)
-CFLAGS += -posix
-CFLAGS += -Dffs=__builtin_ffs
-CFLAGS += -D__USE_MINGW_ANSI_STDIO=1
+CFLAGS := -std=gnu99 -Wall -O3 -Os -D_FILE_OFFSET_BITS=64 -posix -Dffs=__builtin_ffs -D__USE_MINGW_ANSI_STDIO=1 -I$(LIBS_BASE)/Include
+LDFLAGS := -pthread -lwpcap -L$(LIBS_BASE)/Lib -Wl,-rpath -Wl,$(LIBS_BASE)/Lib
 endif
 
 ifeq ($(TARGET_OS), Darwin)
