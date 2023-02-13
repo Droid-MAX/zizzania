@@ -44,7 +44,7 @@ $(RES):
 	$(WINDRES) -i $(TARGET).rc -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET)$(EXEC_SUFFIX) $(RES)
 
 strip: $(TARGET)$(EXEC_SUFFIX)
 	$(STRIP) $(TARGET)$(EXEC_SUFFIX)
