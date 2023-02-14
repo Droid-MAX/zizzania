@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-export DEB_CFLAGS_SET = -std=gnu99 -Wall -O3 -Os
+export DEB_CFLAGS_SET = -std=gnu99 -Wall -O3 -Os -D_FILE_OFFSET_BITS=64
 export DEB_LDFLAGS_SET = -pthread -lpcap
 
 %:
